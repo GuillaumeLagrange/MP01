@@ -10,9 +10,7 @@ int main()
 
     Client client = Client("localhost", 12345); // My machine
     client.connect();
-    NickMessage nick_mess ("guillaume");
-    client.send_message(nick_mess);
-    client.receive_message();
+    client.change_nickname("guigui");
 
     return 0;
 }

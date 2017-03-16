@@ -40,15 +40,14 @@ void Client::connect()
 
 void Client::change_nickname(std::string name)
 {
-    message_header_t header;
-    header.length = sizeof(name);
-    header.type = MSG_TYPE_CHANGE_NICK;
-    header.body_checksum = fletcher16((uint8_t const *) &name, sizeof(name));
-    header.head_checksum = fletcher16((uint8_t const *) &header,
-            sizeof(message_header_t));
-
-    ::send(client_socket, (void *) &header, sizeof(header), 0);
-    ::send(client_socket, (void *) &name, sizeof(name), 0);
+    NickMessage nick_mess (name);
+    send_message(nick_mess);
+    Message msg = receive_message();
+    if (msg.getHeader()->type != MSG_TYPE_ACKNOWLEDGE_CHANGE_NICK) {
+        std::cerr << "Did not receive ack for changing name";
+        exit(EXIT_FAILURE);
+    }
+    std::cout << "Ack received" << std::endl;
 }
 
 void Client::send_message(Message& msg)

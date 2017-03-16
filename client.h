@@ -10,6 +10,7 @@
 #include <string>
 #include <unistd.h>
 #include "message.h"
+#include "nickmess.h"
 
 namespace clt {
     class Client {
