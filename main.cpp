@@ -6,11 +6,10 @@ using namespace clt;
 
 int main()
 {
-    std::cout << "Hello" << std::endl;
-
     Client client = Client("localhost", 12345); // My machine
     client.connect();
-    client.change_nickname("guigui");
+    std::cout << "Connected" << std::endl << std::endl;
+    client.change_nickname("guillaume");
 
     return 0;
 }

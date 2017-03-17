@@ -3,14 +3,16 @@
 
 #include "message.h"
 
-using namespace clt;
-
-class NickMessage : public MessageT<1> {
-    public:
-        NickMessage(std::string name) : MessageT<1>() {
-            body[0] = name;
-            header_update();
-        }
-};
+namespace clt {
+    class NickMessage : public MessageT<1> {
+        public:
+            NickMessage(std::string name) {
+                header = new message_header_t;
+                body = std::vector<std::string>(1, name);
+                header->type = MSG_TYPE_CHANGE_NICK;
+                header_update();
+            }
+    };
+}
 
 #endif

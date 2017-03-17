@@ -3,6 +3,18 @@
 
 using namespace clt;
 
+message_header_t * read_header(int sockfd)
+{
+    message_header_t * hdr = new message_header_t();
+    int ret = ::read(sockfd, hdr, sizeof(message_header_t));
+    if (ret == -1) {
+        std::cerr << "Problem reading header" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+    return hdr;
+}
+
+
 Client::Client(const char* hostname, uint16_t port)
 {
     /* Initializing server adress struct */
@@ -41,32 +53,46 @@ void Client::connect()
 void Client::change_nickname(std::string name)
 {
     NickMessage nick_mess (name);
+    nick_mess.printHeader();
     send_message(nick_mess);
     Message * msg = receive_message();
-    if (msg->getHeader()->type != MSG_TYPE_ACKNOWLEDGE_CHANGE_NICK) {
-        std::cerr << "Did not receive ack for changing name";
-        exit(EXIT_FAILURE);
-    }
+    //if (msg->getHeader()->type != MSG_TYPE_ACKNOWLEDGE_CHANGE_NICK) {
+        //std::cerr << "Did not receive ack for changing name";
+        //exit(EXIT_FAILURE);
+    //}
 }
 
 template<int N>
 void Client::send_message(MessageT<N>& msg)
 {
     message_header_t * header_ptr = msg.getHeader();
-    std::string * body = msg.getBody();
+    std::vector<std::string>  body = msg.getBody();
     ::send(client_socket, (void *) header_ptr, sizeof(*header_ptr), 0);
-    for (int i = 0; i < N; i++) {
-        const char * buffer = body[i].c_str();
-        int buffer_length = body[i].length() + 1;
-        ::send(client_socket, (void *) buffer,
-                sizeof(char) * buffer_length, 0);
+    //for (int i = 0; i < N; i++) {
+        //const char * buffer = body[i].c_str();
+        //int buffer_length = body[i].length() + 1;
+        //::send(client_socket, (void *) buffer,
+                //sizeof(char) * buffer_length, 0);
+    //}
+    int len = 0;
+    for (int i=0; i<N; i++) {
+        len += body[i].length() + 1;
     }
+    char * buffer = (char *) malloc(len);
+    char * current_buffer = buffer;
+    for (int i=0; i<N; i++) {
+        buffer = strcpy(current_buffer, body[i].c_str());
+        current_buffer += body[i].length() + 1;
+    }
+    ::send(client_socket, (void*) buffer, len, 0);
+    int checksum = fletcher16((const uint8_t*) buffer, len);
+    std::cout << "Send checksum " << checksum << std::endl<<std::endl;
+    free(buffer);
 }
 
 Message * Client::receive_message()
 {
-    //Message * message;
-    //message_header_t * hdr = Message::readHeader(client_socket);
+    message_header_t * hdr = read_header(client_socket);
     //switch (hdr->type) {
         //case(4):
             //// TODO : parse the body of the message !
@@ -77,4 +103,5 @@ Message * Client::receive_message()
     ////message.readHeader(client_socket);
     ////message.readBody(client_socket);
     //handleMessage(message);
+    return new MessageT<1>(hdr);
 }
