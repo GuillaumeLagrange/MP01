@@ -24,8 +24,11 @@ namespace clt {
             ~Client();
             void connect();
             void change_nickname(std::string name);
-            void send_message(Message& msg);
-            Message receive_message();
+            template<int N>
+            void send_message(MessageT<N>& msg);
+            Message * receive_message();
+            //Treat the message accordingly then deletes it
+            void handleMessage(Message* message);
     };
 };
 
