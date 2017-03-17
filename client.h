@@ -11,6 +11,7 @@
 #include <unistd.h>
 #include "message.h"
 #include "nickmess.h"
+#include "acknickmess.h"
 
 namespace clt {
     class Client {
@@ -26,9 +27,7 @@ namespace clt {
             void change_nickname(std::string name);
             template<int N>
             void send_message(MessageT<N>& msg);
-            Message * receive_message();
-            //Treat the message accordingly then deletes it
-            void handleMessage(Message* message);
+            void receive_message();
     };
 };
 

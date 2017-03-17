@@ -10,6 +10,7 @@ int main()
     client.connect();
     std::cout << "Connected" << std::endl << std::endl;
     client.change_nickname("guillaume");
+    client.receive_message();
 
     return 0;
 }
