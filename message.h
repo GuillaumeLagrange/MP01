@@ -102,7 +102,7 @@ void MessageT<N>::header_update()
         current_buffer += body[i].length() + 1;
     }
     header->body_checksum = fletcher16((const uint8_t *) buffer, len);
-    std::cout << "Header checksum in header_update" << header->body_checksum <<std::endl<<std::endl;
+    //std::cout << "Header checksum in header_update" << header->body_checksum <<std::endl<<std::endl;
     free(buffer);
 
     header->head_checksum = 0;

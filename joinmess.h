@@ -5,12 +5,13 @@
 
 namespace clt {
     class JoinMessage : public MessageT<1> {
-        JoinMessage(std::string channel) {
-            header = new message_header_t;
-            body = std::vector<std::string>(1, channel);
-            header->type = MSG_TYPE_JOIN;
-            header_update();
-        }
+        public:
+            JoinMessage(std::string channel) {
+                header = new message_header_t;
+                body = std::vector<std::string>(1, channel);
+                header->type = MSG_TYPE_JOIN;
+                header_update();
+            }
     };
 }
 

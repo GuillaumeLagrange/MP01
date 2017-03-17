@@ -53,8 +53,14 @@ void Client::connect()
 void Client::change_nickname(std::string name)
 {
     NickMessage nick_mess (name);
-    nick_mess.printHeader();
     send_message(nick_mess);
+    receive_message();
+}
+
+void Client::change_channel(std::string channel)
+{
+    JoinMessage join_mess(channel);
+    send_message(join_mess);
     receive_message();
 }
 
@@ -75,8 +81,8 @@ void Client::send_message(MessageT<N>& msg)
         current_buffer += body[i].length() + 1;
     }
     ::send(client_socket, (void*) buffer, len, 0);
-    int checksum = fletcher16((const uint8_t*) buffer, len);
-    std::cout << "Send checksum " << checksum << std::endl<<std::endl;
+    //int checksum = fletcher16((const uint8_t*) buffer, len);
+    //std::cout << "Send checksum " << checksum << std::endl<<std::endl;
     free(buffer);
 }
 
@@ -84,10 +90,19 @@ void Client::receive_message()
 {
     message_header_t * hdr = read_header(client_socket);
     switch (hdr->type) {
-        case(4):
+        case(MSG_TYPE_ACKNOWLEDGE_CHANGE_NICK): {
             AckNickMessage * message = new AckNickMessage(hdr);
             message->readBody(client_socket);
             message->handleMessage();
             delete message;
+            break;
+            }
+        case(MSG_TYPE_ACKNOWLEDGE_JOIN): {
+            AckJoinMessage * message = new AckJoinMessage(hdr);
+            message->readBody(client_socket);
+            message->handleMessage();
+            delete message;
+            break;
+            }
     }
 };

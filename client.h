@@ -12,6 +12,8 @@
 #include "message.h"
 #include "nickmess.h"
 #include "acknickmess.h"
+#include "joinmess.h"
+#include "ackjoinmess.h"
 
 namespace clt {
     class Client {
@@ -25,6 +27,7 @@ namespace clt {
             ~Client();
             void connect();
             void change_nickname(std::string name);
+            void change_channel(std::string channel);
             template<int N>
             void send_message(MessageT<N>& msg);
             void receive_message();
