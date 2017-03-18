@@ -89,6 +89,7 @@ void Client::send_message(MessageT<N>& msg)
 void Client::receive_message()
 {
     message_header_t * hdr = read_header(client_socket);
+    printf("Received type %d message\n",hdr->type);
     switch (hdr->type) {
         case(MSG_TYPE_ACKNOWLEDGE_CHANGE_NICK): {
             AckNickMessage * message = new AckNickMessage(hdr);
@@ -96,13 +97,20 @@ void Client::receive_message()
             message->handleMessage();
             delete message;
             break;
-            }
+        }
+        case(MSG_TYPE_MESSAGE): {
+            TextMessage * message = new TextMessage(hdr);
+            message->readBody(client_socket);
+            message->handleMessage();
+            delete message;
+            break;
+        }
         case(MSG_TYPE_ACKNOWLEDGE_JOIN): {
             AckJoinMessage * message = new AckJoinMessage(hdr);
             message->readBody(client_socket);
             message->handleMessage();
             delete message;
             break;
-            }
+        }
     }
 };

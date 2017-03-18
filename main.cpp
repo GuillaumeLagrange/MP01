@@ -11,6 +11,7 @@ int main()
     std::cout << "Connected" << std::endl << std::endl;
     client.change_nickname("guillaume");
     client.receive_message();
+    client.receive_message();
     client.change_channel("test");
 
     return 0;

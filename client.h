@@ -14,6 +14,7 @@
 #include "acknickmess.h"
 #include "joinmess.h"
 #include "ackjoinmess.h"
+#include "textmess.h"
 
 namespace clt {
     class Client {

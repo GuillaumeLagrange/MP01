@@ -7,7 +7,7 @@ namespace clt {
     class AckNickMessage : public MessageT<2> {
         public:
             AckNickMessage(message_header_t * hdr) : MessageT<2>(hdr) {
-                if (hdr->type != 4) {
+                if (hdr->type != MSG_TYPE_ACKNOWLEDGE_CHANGE_NICK) {
                     std::cout << "Wrong type in ack nick header" << std::endl;
                     exit(EXIT_FAILURE);
                 }

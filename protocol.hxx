@@ -28,11 +28,11 @@ enum message_type_e : uint32_t {
 	MSG_TYPE_CHANGE_NICK                = 2, // change nickname (string)
 	MSG_TYPE_PRIVATE                    = 3, // not used
 	MSG_TYPE_ACKNOWLEDGE_CHANGE_NICK    = 4, // acknowledge change nick (string,string)
-	MSG_TYPE_MESSAGE                    = 5, // message (string,string,string) (source, to, body)
+	MSG_TYPE_MESSAGE                    = 5, // message (string,string,string) (from, to, body)
 	MSG_TYPE_JOIN                       = 6, // join channel (string)
 	MSG_TYPE_PING                       = 7, // used to check if client is alive
 	MSG_TYPE_PONG                       = 8, // not used
-	MSG_TYPE_ACKNOWLEDGE_JOIN           = 9  // acknowledge join channel
+	MSG_TYPE_ACKNOWLEDGE_JOIN           = 9  // acknowledge join channe (channel, true or false)
 };
 
 struct message_header_t {

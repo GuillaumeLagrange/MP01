@@ -41,7 +41,7 @@ using namespace clt;
 
 template<int N>
 MessageT<N>::MessageT() : header(new message_header_t),
-    body(std::vector<std::string>(N)) { }
+    body() { }
 
 template<int N>
 MessageT<N>::MessageT(message_header_t * _header) : header(_header),
