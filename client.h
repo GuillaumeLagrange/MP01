@@ -33,6 +33,8 @@ namespace clt {
             void send_message(MessageT<N>& msg);
             void receive_message();
     };
+
+    class ConnectionException : public std::exception {};
 };
 
 #endif

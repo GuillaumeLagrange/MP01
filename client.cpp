@@ -26,8 +26,7 @@ Client::Client(const char* hostname, uint16_t port)
     hostinfo = gethostbyname(hostname);
 
     if (hostinfo == NULL) {
-        std::cerr << "Unkown host name : " << hostname << std::endl;
-        exit(EXIT_FAILURE);
+        throw ConnectionException();
     }
 
     server.sin_addr = *(struct in_addr *) hostinfo->h_addr;
@@ -40,8 +39,7 @@ Client::~Client()
 {
     int ret = ::close(client_socket);
     if (ret != 0) {
-        std::cerr << "Error closing socket" << std::endl;
-        exit(EXIT_FAILURE);
+        throw ConnectionException();
     }
 }
 
@@ -80,16 +78,16 @@ void Client::send_message(MessageT<N>& msg)
         buffer = strcpy(current_buffer, body[i].c_str());
         current_buffer += body[i].length() + 1;
     }
-    ::send(client_socket, (void*) buffer, len, 0);
-    //int checksum = fletcher16((const uint8_t*) buffer, len);
-    //std::cout << "Send checksum " << checksum << std::endl<<std::endl;
+    int ret = ::send(client_socket, (void*) buffer, len, 0);
+    if (ret == -1)
+        throw MessageException();
     free(buffer);
 }
 
 void Client::receive_message()
 {
     message_header_t * hdr = read_header(client_socket);
-    printf("Received type %d message\n",hdr->type);
+    //printf("Received type %d message\n",hdr->type);
     switch (hdr->type) {
         case(MSG_TYPE_ACKNOWLEDGE_CHANGE_NICK): {
             AckNickMessage * message = new AckNickMessage(hdr);

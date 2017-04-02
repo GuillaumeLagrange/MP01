@@ -35,6 +35,8 @@ namespace clt {
             void header_update();
             void printHeader();
     };
+
+    class MessageException : public std::exception {};
 };
 
 using namespace clt;
@@ -60,8 +62,7 @@ void MessageT<N>::readBody(int sockfd)
     char * buffer = (char *) malloc(buffer_length);
     int ret = ::read(sockfd, buffer, buffer_length);
     if (ret == -1) {
-        std::cerr << "Problem reading body" << std::endl;
-        exit(EXIT_FAILURE);
+        throw MessageException();
     }
 
     char * buff = buffer;

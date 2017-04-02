@@ -11,11 +11,12 @@ namespace clt {
             }
             void handleMessage()
             {
-                std::cout << "Coucou" << std::endl;
                 if (body[0] == "true")
                     printf("Joined channel %s\n", body[1].c_str());
-                else
+                else if (body[0] == "false")
                     printf("Could not join channel %s\n", body[1].c_str());
+                else
+                    printf("Error in ack join message reception\n");
             }
     };
 }

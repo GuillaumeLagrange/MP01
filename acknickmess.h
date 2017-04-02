@@ -16,8 +16,10 @@ namespace clt {
             {
                 if (body[1] == "true")
                     std::cout << "Nickname changed to " << body[0] << std::endl;
-                else
+                else if (body[1] == "false")
                     std::cout << "Nickname change failed" << std::endl;
+                else
+                    printf("Error in ack nick message reception\n");
             }
     };
 }
